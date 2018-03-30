@@ -7,7 +7,7 @@ import (
 	"github.com/meatballhat/negroni-logrus"
 	"github.com/oxfeeefeee/appgo"
 	"github.com/oxfeeefeee/appgo/auth"
-	"github.com/phyber/negroni-gzip/gzip"
+	gzip "github.com/liguangsheng/negroni-cgzip"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/rs/cors"
 	"github.com/unrolled/render"
