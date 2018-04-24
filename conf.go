@@ -32,13 +32,7 @@ var Conf struct {
 		MaxConn     int
 		MaxLifetime int
 	}
-	Redis []struct {
-		Host        string
-		Port        string
-		Password    string
-		MaxIdle     int
-		IdleTimeout int
-	}
+	Redis   []RedisConf
 	Negroni struct {
 		Port string
 		GZip bool
@@ -106,6 +100,15 @@ var Conf struct {
 		Port   string
 	}
 	IvankaLog ivankastd.ConfigLog
+}
+
+type RedisConf struct {
+	Tag         string
+	Host        string
+	Port        string
+	Password    string
+	MaxIdle     int
+	IdleTimeout int
 }
 
 func initConfig() {
