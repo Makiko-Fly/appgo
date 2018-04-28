@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"database/sql"
 	"errors"
-	log "github.com/Sirupsen/logrus"
 	"github.com/jinzhu/gorm"
 	"github.com/oxfeeefeee/appgo"
 	"github.com/oxfeeefeee/appgo/auth"
@@ -15,6 +14,7 @@ import (
 	"github.com/oxfeeefeee/appgo/services/weixin"
 	"github.com/oxfeeefeee/appgo/toolkit/crypto"
 	"github.com/parnurzeal/gorequest"
+	log "github.com/sirupsen/logrus"
 	"strings"
 	"time"
 )

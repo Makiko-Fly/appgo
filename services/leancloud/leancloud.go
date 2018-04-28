@@ -1,9 +1,9 @@
 package leancloud
 
 import (
-	log "github.com/Sirupsen/logrus"
 	"github.com/oxfeeefeee/appgo"
 	"github.com/parnurzeal/gorequest"
+	log "github.com/sirupsen/logrus"
 	"strings"
 )
 

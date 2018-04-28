@@ -1,8 +1,8 @@
 package userSystem
 
 import (
-	log "github.com/Sirupsen/logrus"
 	"github.com/oxfeeefeee/appgo"
+	log "github.com/sirupsen/logrus"
 )
 
 type defaultKvStore map[string]string

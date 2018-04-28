@@ -1,7 +1,6 @@
 package server
 
 import (
-	log "github.com/Sirupsen/logrus"
 	"github.com/codegangsta/negroni"
 	"github.com/gorilla/mux"
 	"github.com/meatballhat/negroni-logrus"
@@ -10,6 +9,7 @@ import (
 	"github.com/phyber/negroni-gzip/gzip"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/rs/cors"
+	log "github.com/sirupsen/logrus"
 	"github.com/unrolled/render"
 	"html/template"
 	"net/http"

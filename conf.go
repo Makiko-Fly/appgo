@@ -1,8 +1,8 @@
 package appgo
 
 import (
-	log "github.com/Sirupsen/logrus"
 	"github.com/jinzhu/configor"
+	log "github.com/sirupsen/logrus"
 	"gitlab.wallstcn.com/wscnbackend/ivankastd"
 	"os"
 	"path/filepath"
