@@ -3,9 +3,9 @@ package server
 import (
 	"crypto/sha256"
 	"encoding/base64"
-	log "github.com/Sirupsen/logrus"
 	"github.com/oxfeeefeee/appgo"
 	"github.com/oxfeeefeee/appgo/toolkit"
+	log "github.com/sirupsen/logrus"
 	"io"
 	"os"
 	"strings"

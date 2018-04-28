@@ -3,9 +3,9 @@ package jssdk
 import (
 	"encoding/json"
 	"fmt"
-	log "github.com/Sirupsen/logrus"
 	"github.com/oxfeeefeee/appgo/toolkit/strutil"
 	"github.com/parnurzeal/gorequest"
+	log "github.com/sirupsen/logrus"
 	"time"
 )
 

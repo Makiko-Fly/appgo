@@ -2,8 +2,8 @@ package qq
 
 import (
 	"encoding/json"
-	log "github.com/Sirupsen/logrus"
 	"github.com/parnurzeal/gorequest"
+	log "github.com/sirupsen/logrus"
 	"net/url"
 )
 

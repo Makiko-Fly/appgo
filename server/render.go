@@ -1,8 +1,8 @@
 package server
 
 import (
-	log "github.com/Sirupsen/logrus"
 	"github.com/oxfeeefeee/appgo"
+	log "github.com/sirupsen/logrus"
 	"net/http"
 )
 

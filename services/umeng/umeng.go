@@ -3,11 +3,11 @@ package umeng
 import (
 	"encoding/hex"
 	"encoding/json"
-	log "github.com/Sirupsen/logrus"
 	"github.com/oxfeeefeee/appgo"
 	"github.com/oxfeeefeee/appgo/toolkit/crypto"
 	"github.com/oxfeeefeee/appgo/toolkit/strutil"
 	"github.com/parnurzeal/gorequest"
+	log "github.com/sirupsen/logrus"
 	"strings"
 	"time"
 )

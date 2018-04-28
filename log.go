@@ -2,7 +2,7 @@ package appgo
 
 import (
 	"fmt"
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 	// "gopkg.in/gemnasium/logrus-graylog-hook.v1"
 	"gitlab.wallstcn.com/wscnbackend/ivankastd"
 	"io"
