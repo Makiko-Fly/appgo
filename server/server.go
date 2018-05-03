@@ -1,7 +1,6 @@
 package server
 
 import (
-	"github.com/codegangsta/negroni"
 	"github.com/gorilla/mux"
 	"github.com/meatballhat/negroni-logrus"
 	"github.com/oxfeeefeee/appgo"
@@ -11,6 +10,7 @@ import (
 	"github.com/rs/cors"
 	log "github.com/sirupsen/logrus"
 	"github.com/unrolled/render"
+	"github.com/urfave/negroni"
 	"html/template"
 	"net/http"
 	_ "net/http/pprof"
