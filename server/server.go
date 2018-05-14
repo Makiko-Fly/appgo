@@ -34,6 +34,7 @@ type MetricsSchema interface {
 
 func NewServer(ts TokenStore, middlewares []negroni.Handler,
 	mschema []MetricsSchema) *Server {
+	auth.InitTokenCache()
 	for _, s := range mschema {
 		m := newMetrics(s)
 		middlewares = append(middlewares, m)

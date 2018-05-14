@@ -96,29 +96,38 @@ func Init(db *gorm.DB, settings UserSystemSettings) *UserSystem {
 }
 
 func (u *UserSystem) Validate(uid appgo.Id, role appgo.Role, token auth.Token, platform string) bool {
-	return true
-	// request with no platform is from pc
-	if len(strings.TrimSpace(platform)) == 0 {
+	// return true
+	// request with no platform is from old device
+	platform = strings.TrimSpace(platform)
+	if len(platform) == 0 {
 		return true
 	}
 	if role == appgo.RoleAppUser {
+		device := parsePlatform(platform)
 		// get user's token from cache
-		cacheToken, err := auth.GetCacheToken(uid)
-		cacheToken = strings.TrimSpace(cacheToken)
+		cacheTokenInfo, err := auth.GetCacheToken(uid)
 		if err != nil {
 			log.Errorf("get user %d token from cache failed, error: %v", uid, err)
 		} else {
-			if cacheToken != "" {
-				return string(token) == cacheToken
+			tmpTokenInfos := strings.Split(cacheTokenInfo, ":")
+			if len(tmpTokenInfos) > 1 {
+				cacheDevice := tmpTokenInfos[0]
+				cacheToken := tmpTokenInfos[1]
+				switch {
+				case device == "pc":
+					if cacheDevice == "pc" {
+						return cacheToken == string(token)
+					}
+				case device == "ios":
+					if cacheDevice == "ios" || cacheDevice == "android" {
+						return cacheToken == string(token)
+					}
+				case device == "android":
+					if cacheDevice == "ios" || cacheDevice == "android" {
+						return cacheToken == string(token)
+					}
+				}
 			}
-		}
-
-		// get user's token from db
-		user, err := u.GetUserModel(uid)
-		if err != nil {
-			return false
-		} else {
-			return user.AppToken.String == string(token)
 		}
 	}
 
@@ -179,16 +188,23 @@ func (u *UserSystem) CheckIn(id appgo.Id, role appgo.Role,
 			}).Errorln("failed to save token")
 			return false, nil, appgo.InternalErr
 		}
+	}
+	// todo stuff about ban
+	return false, user, nil
+}
 
-		if err := auth.SetCacheToken(id, tk.String); err != nil {
+func (u *UserSystem) UpdateCacheToken(id appgo.Id, token string, platform string) error {
+	device := parsePlatform(strings.TrimSpace(platform))
+	if len(device) > 0 {
+		if err := auth.SetCacheToken(id, device+":"+token); err != nil {
 			log.WithFields(log.Fields{
 				"id":        id,
 				"gormError": err,
 			}).Errorln("failed to set cache token")
+			return err
 		}
 	}
-	// todo stuff about ban
-	return false, user, nil
+	return nil
 }
 
 func (u *UserSystem) UpdatePushInfo(id appgo.Id, pushInfo *appgo.PushInfo) error {
@@ -501,6 +517,18 @@ func (u *UserSystem) saveUser(user *UserModel) (appgo.Id, error) {
 		return user.Id, u.OnCreated(user.Id)
 	}
 	return user.Id, nil
+}
+
+func parsePlatform(platform string) string {
+	platform = strings.ToLower(platform)
+	sections := strings.Split(platform, ";")
+	if len(sections) > 0 {
+		device := strings.Split(sections[0], "=")
+		if len(device) > 1 {
+			return device[1]
+		}
+	}
+	return ""
 }
 
 func dbModelToData(model *UserModel) *UserData {
