@@ -132,10 +132,14 @@ func (h *handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		user, _ := h.authByHeader(r)
 		s := input.Elem()
 		field := s.FieldByName(UserIdFieldName)
-		if user == 0 {
+		if user <= 0 {
 			if f.allowAnonymous {
 				field.SetInt(appgo.AnonymousId)
 			} else {
+				if user == -1 {
+					h.renderError(w, appgo.BannedErr)
+					return
+				}
 				h.renderError(w, appgo.NewApiErr(
 					appgo.ECodeUnauthorized,
 					"either remove UserId__ in your input define, or add allowAnonymous tag",
@@ -318,8 +322,8 @@ func addMetrics(r *http.Request, begin time.Time) {
 func (h *handler) authByHeader(r *http.Request) (appgo.Id, appgo.Role) {
 	token := auth.Token(r.Header.Get(appgo.CustomTokenHeaderName))
 	user, role := token.Validate()
-	if user == 0 {
-		return 0, 0
+	if user <= 0 {
+		return user, 0
 	}
 	platform := platformFromHeader(r)
 	if !h.ts.Validate(user, role, token, platform) {
