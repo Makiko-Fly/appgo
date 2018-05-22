@@ -9,6 +9,7 @@ import (
 var (
 	NotFoundErr                    *ApiError
 	UnauthorizedErr                *ApiError
+	BannedErr                      *ApiError
 	ForbiddenErr                   *ApiError
 	InternalErr                    *ApiError
 	InvalidUsernameErr             *ApiError
@@ -29,6 +30,7 @@ const (
 	ECodeRedirect                            = 30200
 	ECodeBadRequest                          = 40000
 	ECodeUnauthorized                        = 40100
+	ECodeBanned                              = 40101
 	ECodeForbidden                           = 40300
 	ECodeNotFound                            = 40400
 	ECodeInternal                            = 50000
@@ -51,6 +53,7 @@ type ErrCode int
 func init() {
 	NotFoundErr = NewApiErr(ECodeNotFound, "NotFound error")
 	UnauthorizedErr = NewApiErr(ECodeUnauthorized, "Unauthorized error")
+	BannedErr = NewApiErr(ECodeBanned, "User banned error")
 	ForbiddenErr = NewApiErr(ECodeForbidden, "Forbidden error")
 	InternalErr = NewApiErr(ECodeInternal, "Internal error")
 	InvalidUsernameErr = NewApiErr(ECodeInvalidUsername, "Invalid username")

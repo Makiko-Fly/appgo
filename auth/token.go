@@ -4,10 +4,10 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
-	log "github.com/sirupsen/logrus"
 	"github.com/oxfeeefeee/appgo"
 	"github.com/oxfeeefeee/appgo/redis"
 	"github.com/oxfeeefeee/appgo/toolkit/crypto"
+	log "github.com/sirupsen/logrus"
 	"strconv"
 	"strings"
 	"time"
@@ -72,7 +72,7 @@ func (t Token) Validate() (appgo.Id, appgo.Role) {
 	}
 	// check if user is baned
 	if userSystem.IsBanned(userId) {
-		return 0, 0
+		return -1, 0
 	}
 	return userId, appgo.Role(roleInt)
 }
