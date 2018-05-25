@@ -103,28 +103,31 @@ func (u *UserSystem) Validate(uid appgo.Id, role appgo.Role, token auth.Token, p
 		return true
 	}
 	if role == appgo.RoleAppUser {
-		device := parsePlatform(platform)
-		// get user's token from cache
-		cacheTokenInfo, err := auth.GetCacheToken(uid)
-		if err != nil {
-			log.Errorf("get user %d token from cache failed, error: %v", uid, err)
-		} else {
-			tmpTokenInfos := strings.Split(cacheTokenInfo, ":")
-			if len(tmpTokenInfos) > 1 {
-				cacheDevice := tmpTokenInfos[0]
-				cacheToken := tmpTokenInfos[1]
-				switch {
-				case device == "pc":
-					if cacheDevice == "pc" {
-						return cacheToken == string(token)
-					}
-				case device == "ios":
-					if cacheDevice == "ios" || cacheDevice == "android" {
-						return cacheToken == string(token)
-					}
-				case device == "android":
-					if cacheDevice == "ios" || cacheDevice == "android" {
-						return cacheToken == string(token)
+		device, channel := parsePlatform(platform)
+		// if channel is weixin, it is from m site inside weixin
+		if channel != "weixin" {
+			// get user's token from cache
+			cacheTokenInfo, err := auth.GetCacheToken(uid)
+			if err != nil {
+				log.Errorf("get user %d token from cache failed, error: %v", uid, err)
+			} else {
+				tmpTokenInfos := strings.Split(cacheTokenInfo, ":")
+				if len(tmpTokenInfos) > 1 {
+					cacheDevice := tmpTokenInfos[0]
+					cacheToken := tmpTokenInfos[1]
+					switch {
+					case device == "pc":
+						if cacheDevice == "pc" {
+							return cacheToken == string(token)
+						}
+					case device == "ios":
+						if cacheDevice == "ios" || cacheDevice == "android" {
+							return cacheToken == string(token)
+						}
+					case device == "android":
+						if cacheDevice == "ios" || cacheDevice == "android" {
+							return cacheToken == string(token)
+						}
 					}
 				}
 			}
@@ -194,7 +197,7 @@ func (u *UserSystem) CheckIn(id appgo.Id, role appgo.Role,
 }
 
 func (u *UserSystem) UpdateCacheToken(id appgo.Id, token string, platform string) error {
-	device := parsePlatform(strings.TrimSpace(platform))
+	device, _ := parsePlatform(strings.TrimSpace(platform))
 	if len(device) > 0 {
 		if err := auth.SetCacheToken(id, device+":"+token); err != nil {
 			log.WithFields(log.Fields{
@@ -519,16 +522,23 @@ func (u *UserSystem) saveUser(user *UserModel) (appgo.Id, error) {
 	return user.Id, nil
 }
 
-func parsePlatform(platform string) string {
+func parsePlatform(platform string) (string, string) {
+	device, channel := "", ""
 	platform = strings.ToLower(platform)
 	sections := strings.Split(platform, ";")
-	if len(sections) > 0 {
-		device := strings.Split(sections[0], "=")
-		if len(device) > 1 {
-			return device[1]
+	for _, section := range sections {
+		strs := strings.Split(section, "=")
+		if len(strs) > 1 {
+			switch strs[0] {
+			case "device":
+				device = strs[1]
+			case "channel":
+				channel = strs[1]
+			}
 		}
 	}
-	return ""
+
+	return device, channel
 }
 
 func dbModelToData(model *UserModel) *UserData {
