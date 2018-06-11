@@ -153,14 +153,19 @@ func LoginByWeixinWeb(wxappInfo *weixin.AppInfo, openId, token, code string, rol
 	if err != nil {
 		return nil, "", "", err
 	}
+	isNew := false
 	if uid == 0 {
 		uid, err = weixinSupport.AddWeixinUser(winfo)
 		if err != nil {
 			return nil, "", "", err
 		}
+		isNew = true
 	}
 
 	loginRes, err := checkIn(uid, role)
+	if loginRes != nil {
+		loginRes.IsNew = isNew
+	}
 	return loginRes, openId, winfo.Nickname, err
 }
 
